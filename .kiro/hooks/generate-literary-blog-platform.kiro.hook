@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Generate Literary Blog Platform",
+  "description": "Generates a full stack dark academia themed blog website with MongoDB, post CRUD, categories, image uploads, real-time notifications, and admin access whenever triggered",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Generate a full stack blog website with the following features and stack:\n\nSTACK:\n- Frontend: React + Vite + TailwindCSS\n- Backend: Node.js + Express\n- Database: MongoDB with Mongoose\n- Real-time: Socket.io for notifications\n- Image uploads: Multer + Cloudinary (or local storage)\n- Auth: JWT-based with admin role\n\nFEATURES:\n1. Posts: create, edit, delete with title, author name, category (dropdown), cover image, and inline images in the blog body (rich text editor like TipTap or Quill)\n2. Homepage: all blogs listed category-wise with filter options by category\n3. Intro animation: on first load, \"Literary and Debating Society\" text zooms in and after 2 seconds transitions to the homepage\n4. Real-time notifications: when a new blog is posted, all connected users get a notification via Socket.io\n5. Admin panel: one admin account that can edit/delete any post\n6. MongoDB stores all posts with fields: title, author, category, coverImage, body, createdAt\n\nUI THEME:\n- Dark academia literary aesthetic\n- Dark backgrounds (deep browns, charcoals, near-blacks)\n- Serif fonts (e.g., Playfair Display, Lora)\n- Warm amber/gold accents\n- Parchment-like text colors\n- Subtle textures and elegant typography\n- Smooth transitions and animations\n\nGenerate the complete project structure with all files needed to run this application. Include package.json for both frontend and backend, all React components, Express routes, Mongoose models, and Socket.io setup."
+  }
+}
