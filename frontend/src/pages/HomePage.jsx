@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../api';
 import PostCard from '../components/PostCard';
 import CategoryFilter from '../components/CategoryFilter';
+import MembersCarousel from '../components/MembersCarousel';
 
 const CATEGORIES = ['Literature', 'Debate', 'Philosophy', 'Poetry', 'Essays'];
 
@@ -64,6 +65,7 @@ export default function HomePage() {
           </section>
         ))
       )}
+      <MembersCarousel />
     </main>
   );
 }
