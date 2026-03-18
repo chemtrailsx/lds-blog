@@ -26,7 +26,7 @@ router.put('/me', authMiddleware, async (req, res) => {
     if (bio !== undefined) user.bio = bio;
 
     await user.save();
-    res.json({ id: user._id, username: user.username, name: user.name, role: user.role, gender: user.gender, memberSince: user.memberSince, bio: user.bio });
+    res.json({ id: user._id, name: user.name, role: user.role, gender: user.gender, memberSince: user.memberSince, bio: user.bio });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

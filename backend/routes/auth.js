@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
     if (existing) return res.status(409).json({ error: 'Email already in use' });
 
     const hashed = await bcrypt.hash(password, 12);
-    const user = await User.create({ username: name, email, password: hashed, name });
+    const user = await User.create({ email, password: hashed, name });
 
     res.status(201).json({ token: makeToken(user), user: publicUser(user) });
   } catch (err) {
