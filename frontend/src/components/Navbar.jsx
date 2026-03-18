@@ -14,7 +14,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const handleLogout = () => { logout(); navigate('/'); };
-  const initial = (user?.name || user?.username || '?')[0].toUpperCase();
+  const initial = (user?.name || '?')[0].toUpperCase();
 
   return (
     <nav className="border-b border-amber/20 bg-bark/80 backdrop-blur-sm sticky top-0 z-40">

@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 export default function RegisterPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', username: '', email: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -16,7 +16,7 @@ export default function RegisterPage() {
     try {
       const { data } = await api.post('/api/v1/auth/register', form);
       login(data.token, data.user);
-      toast.success(`Welcome, ${data.user.name || data.user.username}`);
+      toast.success(`Welcome, ${data.user.name}`);
       navigate('/');
     } catch (err) {
       toast.error(err.response?.data?.error || 'Registration failed');
@@ -38,12 +38,8 @@ export default function RegisterPage() {
         <div className="card p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Full Name</label>
-              <input className="input-field" placeholder="Your full name" value={form.name} onChange={set('name')} required />
-            </div>
-            <div>
-              <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Username</label>
-              <input className="input-field" placeholder="your_handle" value={form.username} onChange={set('username')} required />
+              <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Name</label>
+              <input className="input-field" placeholder="Your name" value={form.name} onChange={set('name')} required />
             </div>
             <div>
               <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Email</label>

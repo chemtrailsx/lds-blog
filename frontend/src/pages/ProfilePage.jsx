@@ -43,7 +43,7 @@ export default function ProfilePage() {
 
   if (loading) return <div className="text-center py-20 text-parchment/40 font-serif italic">Loading...</div>;
 
-  const displayName = form.name || user?.username || '?';
+  const displayName = form.name || '?';
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-12">
