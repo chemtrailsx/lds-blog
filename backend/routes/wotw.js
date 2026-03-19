@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const auth = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 const WordOfTheWeek = require('../models/WordOfTheWeek');
 
 // GET current word
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // PUT update word (admin only)
-router.put('/', auth, async (req, res) => {
+router.put('/', authMiddleware, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
     const { word, definition } = req.body;
