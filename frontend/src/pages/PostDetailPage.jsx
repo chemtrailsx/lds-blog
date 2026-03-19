@@ -49,7 +49,14 @@ export default function PostDetailPage() {
         <span className="text-amber text-xs tracking-widest uppercase">{post.category}</span>
         <h1 className="font-serif text-3xl md:text-4xl text-parchment mt-2 mb-3">{post.title}</h1>
         <div className="flex items-center gap-3 text-parchment/40 text-sm mb-8">
-          <span>by <span className="text-parchment/70">{post.author}</span></span>
+          <span>by{' '}
+            <Link
+              to={`/author/${post.editor?._id || post.editor}`}
+              className="text-parchment/70 hover:text-amber transition-colors"
+            >
+              {post.author}
+            </Link>
+          </span>
           <span>·</span>
           <span>{new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
         </div>

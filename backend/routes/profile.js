@@ -13,6 +13,17 @@ router.get('/me', authMiddleware, async (req, res) => {
   }
 });
 
+// GET public profile by user ID
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password -email');
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // PUT update profile
 router.put('/me', authMiddleware, async (req, res) => {
   try {
