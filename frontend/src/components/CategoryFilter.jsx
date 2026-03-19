@@ -1,4 +1,4 @@
-const CATEGORIES = ['All', 'Literature', 'Debate', 'Philosophy', 'Poetry', 'Essays'];
+const CATEGORIES = ['All', 'Poems and Stories', 'Films, TV and Books', 'Miscellaneous', 'Hindi Literature', 'Personalities', 'New Additions'];
 
 export default function CategoryFilter({ selected, onChange }) {
   return (

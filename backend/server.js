@@ -10,6 +10,7 @@ const postRoutes = require('./routes/posts');
 const imageRoutes = require('./routes/images');
 const profileRoutes = require('./routes/profile');
 const notificationRoutes = require('./routes/notifications');
+const wotwRoutes = require('./routes/wotw');
 
 const app = express();
 const server = http.createServer(app);
@@ -52,6 +53,7 @@ app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/images', imageRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
+app.use('/api/v1/wotw', wotwRoutes);
 
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);

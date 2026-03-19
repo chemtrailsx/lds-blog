@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema({
   title:      { type: String, required: true },
   author:     { type: String, required: true },
-  category:   { type: String, required: true, enum: ['Literature', 'Debate', 'Philosophy', 'Poetry', 'Essays'] },
+  category:   { type: String, required: true, enum: ['Poems and Stories', 'Films, TV and Books', 'Miscellaneous', 'Hindi Literature', 'Personalities', 'New Additions'] },
   coverImage: { type: String, default: '' },
   body:       { type: String, required: true },
   editor:     { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import PostEditor from '../components/PostEditor';
 import { useAuth } from '../context/AuthContext';
 
-const CATEGORIES = ['Literature', 'Debate', 'Philosophy', 'Poetry', 'Essays'];
+const CATEGORIES = ['Poems and Stories', 'Films, TV and Books', 'Miscellaneous', 'Hindi Literature', 'Personalities', 'New Additions'];
 
 export default function CreatePostPage() {
   const navigate = useNavigate();

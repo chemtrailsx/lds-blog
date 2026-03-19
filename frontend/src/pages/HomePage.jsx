@@ -3,8 +3,9 @@ import api from '../api';
 import PostCard from '../components/PostCard';
 import CategoryFilter from '../components/CategoryFilter';
 import MembersCarousel from '../components/MembersCarousel';
+import WordOfTheWeek from '../components/WordOfTheWeek';
 
-const CATEGORIES = ['Literature', 'Debate', 'Philosophy', 'Poetry', 'Essays'];
+const CATEGORIES = ['Poems and Stories', 'Films, TV and Books', 'Miscellaneous', 'Hindi Literature', 'Personalities', 'New Additions'];
 
 export default function HomePage() {
   const [posts, setPosts] = useState([]);
@@ -31,7 +32,7 @@ export default function HomePage() {
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
       {/* Hero */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-8">
         <p className="text-amber/60 text-xs tracking-[0.4em] uppercase mb-3">Welcome to the</p>
         <h1 className="font-serif text-4xl md:text-5xl text-parchment mb-4">
           Literary &amp; <span className="text-amber italic">Debating</span> Society
@@ -41,6 +42,12 @@ export default function HomePage() {
           <span className="text-amber text-lg">✦</span>
           <div className="h-px w-24 bg-amber/30" />
         </div>
+      </div>
+
+      {/* Word of the Week */}
+      <WordOfTheWeek />
+
+      <div className="mb-12 mt-10">
         <CategoryFilter selected={filter} onChange={setFilter} />
       </div>
 
