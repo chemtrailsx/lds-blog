@@ -1,10 +1,19 @@
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Uses Brevo (Sendinblue) SMTP — works on Render, sends to any email
+const transporter = nodemailer.createTransport({
+  host: 'smtp-relay.brevo.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.BREVO_SMTP_USER, // your Brevo account email
+    pass: process.env.BREVO_SMTP_PASS, // Brevo SMTP key (not login password)
+  },
+});
 
 async function sendPasswordReset(toEmail, resetUrl) {
-  await resend.emails.send({
-    from: 'L&D Society <onboarding@resend.dev>',
+  await transporter.sendMail({
+    from: `"L&D Society" <${process.env.BREVO_SMTP_USER}>`,
     to: toEmail,
     subject: 'Reset your password — L&D Society',
     html: `
