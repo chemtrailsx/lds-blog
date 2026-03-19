@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import toast from 'react-hot-toast';
 import PostEditor from '../components/PostEditor';
-import { useAuth } from '../context/AuthContext';
+import { useUser } from '@clerk/clerk-react';
 
 const CATEGORIES = ['Poems and Stories', 'Films, TV and Books', 'Miscellaneous', 'Hindi Literature', 'Personalities', 'New Additions'];
 
 export default function CreatePostPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useUser();
   const [form, setForm] = useState({ title: '', category: '', body: '' });
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState('');
@@ -30,42 +30,28 @@ export default function CreatePostPage() {
       return;
     }
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error("Please login first");
-      return;
-    }
-
     setSubmitting(true);
 
     try {
       let coverImage = '';
 
-      // Upload image
+      // Upload image (auth header is handled by the axios interceptor)
       if (coverFile) {
         const fd = new FormData();
         fd.append('image', coverFile);
-
         const { data } = await api.post('/api/v1/images/upload', fd, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
-          }
+          headers: { 'Content-Type': 'multipart/form-data' }
         });
-
         coverImage = data.url;
       }
 
       // Create post
-      const { data } = await api.post(
-        '/api/v1/posts',
-        { ...form, author: user.name || user.username, coverImage },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const authorName = user?.firstName || user?.username || 'Anonymous';
+      const { data } = await api.post('/api/v1/posts', {
+        ...form,
+        author: authorName,
+        coverImage,
+      });
 
       toast.success('Post published');
       navigate(`/post/${data._id}`);
@@ -77,6 +63,8 @@ export default function CreatePostPage() {
       setSubmitting(false);
     }
   };
+
+  const authorDisplay = user?.firstName || user?.username || '...';
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-12">
@@ -95,7 +83,7 @@ export default function CreatePostPage() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Author</label>
-            <div className="input-field opacity-60 cursor-not-allowed">{user?.name || user?.username}</div>
+            <div className="input-field opacity-60 cursor-not-allowed">{authorDisplay}</div>
           </div>
           <div>
             <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Category *</label>

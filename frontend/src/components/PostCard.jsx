@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useUser } from '@clerk/clerk-react';
 import api from '../api';
 import toast from 'react-hot-toast';
 
 export default function PostCard({ post, onDeleted }) {
-  const { user } = useAuth();
+  const { user } = useUser();
   const isOwner = user && user.id === post.editor;
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.publicMetadata?.role === 'admin';
 
   const handleDelete = async (e) => {
     e.preventDefault();

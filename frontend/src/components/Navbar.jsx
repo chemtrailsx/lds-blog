@@ -1,5 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
+import { useUser, useClerk, SignedIn, SignedOut } from '@clerk/clerk-react';
 import NotificationBell from './NotificationBell';
 
 function ProfileIcon({ initial }) {
@@ -11,11 +11,11 @@ function ProfileIcon({ initial }) {
 }
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useUser();
+  const { signOut } = useClerk();
 
-  const handleLogout = () => { logout(); navigate('/'); };
-  const initial = (user?.name || '?')[0].toUpperCase();
+  const handleLogout = () => { signOut(); };
+  const initial = (user?.firstName || user?.username || '?')[0].toUpperCase();
 
   return (
     <nav className="border-b border-amber/20 bg-bark/80 backdrop-blur-sm sticky top-0 z-40">
@@ -27,24 +27,22 @@ export default function Navbar() {
         <div className="flex items-center gap-4 text-sm font-sans tracking-wide">
           <Link to="/" className="text-parchment/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Feed</Link>
 
-          {user ? (
-            <>
-              <Link to="/create" className="text-parchment/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Write</Link>
-              {user.role === 'admin' && (
-                <Link to="/admin" className="text-amber/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Admin</Link>
-              )}
-              <Link to="/profile" title="My Profile">
-                <ProfileIcon initial={initial} />
-              </Link>
-              <NotificationBell />
-              <button onClick={handleLogout} className="btn-ghost text-xs py-1 px-3">Logout</button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="text-parchment/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Login</Link>
-              <Link to="/register" className="btn-primary text-xs py-1 px-4">Join</Link>
-            </>
-          )}
+          <SignedIn>
+            <Link to="/create" className="text-parchment/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Write</Link>
+            {user?.publicMetadata?.role === 'admin' && (
+              <Link to="/admin" className="text-amber/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Admin</Link>
+            )}
+            <Link to="/profile" title="My Profile">
+              <ProfileIcon initial={initial} />
+            </Link>
+            <NotificationBell />
+            <button onClick={handleLogout} className="btn-ghost text-xs py-1 px-3">Logout</button>
+          </SignedIn>
+
+          <SignedOut>
+            <Link to="/sign-in" className="text-parchment/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Login</Link>
+            <Link to="/sign-up" className="btn-primary text-xs py-1 px-4">Join</Link>
+          </SignedOut>
         </div>
       </div>
     </nav>

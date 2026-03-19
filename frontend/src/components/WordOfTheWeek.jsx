@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
-import { useAuth } from '../context/AuthContext';
+import { useUser } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 
 export default function WordOfTheWeek() {
-  const { user } = useAuth();
+  const { user } = useUser();
   const [data, setData] = useState(null);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({ word: '', definition: '' });
@@ -18,10 +18,7 @@ export default function WordOfTheWeek() {
 
   const handleSave = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const { data: updated } = await api.put('/api/v1/wotw', form, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const { data: updated } = await api.put('/api/v1/wotw', form);
       setData(updated);
       setEditing(false);
       toast.success('Word of the Week updated');
@@ -30,7 +27,7 @@ export default function WordOfTheWeek() {
     }
   };
 
-  if (!data && !user?.role === 'admin') return null;
+  if (!data && user?.publicMetadata?.role !== 'admin') return null;
 
   return (
     <div className="relative max-w-2xl mx-auto mb-2">
@@ -65,7 +62,7 @@ export default function WordOfTheWeek() {
             <p className="text-parchment/50 text-sm leading-relaxed max-w-md mx-auto">
               {data?.definition || 'No definition set yet.'}
             </p>
-            {user?.role === 'admin' && (
+            {user?.publicMetadata?.role === 'admin' && (
               <button
                 onClick={() => setEditing(true)}
                 className="absolute top-3 right-3 text-amber/30 hover:text-amber text-xs transition-colors"

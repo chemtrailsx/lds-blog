@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.61.3",
     "@tiptap/extension-image": "^2.1.13",
     "@tiptap/pm": "^2.1.13",
     "@tiptap/react": "^2.1.13",

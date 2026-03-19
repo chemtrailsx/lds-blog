@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
 import toast from 'react-hot-toast';
-import { useAuth } from '../context/AuthContext';
+import { useUser } from '@clerk/clerk-react';
 
 const GENDERS = ['', 'Male', 'Female', 'Non-binary', 'Prefer not to say'];
 const currentYear = new Date().getFullYear();
 const YEARS = Array.from({ length: 30 }, (_, i) => String(currentYear - i));
 
 export default function ProfilePage() {
-  const { user, updateUser } = useAuth();
+  const { user } = useUser();
   const [form, setForm] = useState({ name: '', gender: '', memberSince: '', bio: '' });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -29,8 +29,7 @@ export default function ProfilePage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const { data } = await api.put('/api/v1/profile/me', form);
-      updateUser(data);
+      await api.put('/api/v1/profile/me', form);
       toast.success('Profile updated');
     } catch {
       toast.error('Failed to save profile');
@@ -43,7 +42,7 @@ export default function ProfilePage() {
 
   if (loading) return <div className="text-center py-20 text-parchment/40 font-serif italic">Loading...</div>;
 
-  const displayName = form.name || '?';
+  const displayName = form.name || user?.firstName || '?';
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-12">
@@ -54,7 +53,7 @@ export default function ProfilePage() {
         </div>
         <div>
           <h1 className="font-serif text-2xl text-parchment">{displayName}</h1>
-          {user?.role === 'admin' && (
+          {user?.publicMetadata?.role === 'admin' && (
             <span className="text-amber/60 text-xs tracking-widest uppercase">Admin</span>
           )}
         </div>

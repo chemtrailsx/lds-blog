@@ -1,14 +1,14 @@
-const jwt = require('jsonwebtoken');
+const { requireAuth } = require('@clerk/express');
 
+// Clerk's requireAuth() middleware populates req.auth with { userId, sessionId, ... }
+// We map req.auth.userId → req.user.sub so downstream route handlers stay unchanged
 function authMiddleware(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Authentication required' });
-  try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
+  requireAuth()(req, res, (err) => {
+    if (err) return res.status(401).json({ error: 'Authentication required' });
+    // Map Clerk's auth shape to the old { sub, role } shape used by route handlers
+    req.user = { sub: req.auth.userId, role: req.auth.sessionClaims?.metadata?.role || 'user' };
     next();
-  } catch {
-    return res.status(401).json({ error: 'Authentication required' });
-  }
+  });
 }
 
 function adminMiddleware(req, res, next) {

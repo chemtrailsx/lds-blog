@@ -4,7 +4,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const mongoose = require('mongoose');
-
+const { clerkMiddleware, requireAuth } = require('@clerk/express');
 const authRoutes = require('./routes/auth');
 const postRoutes = require('./routes/posts');
 const imageRoutes = require('./routes/images');
@@ -47,6 +47,7 @@ app.set('io', io);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static(require('path').join(__dirname, 'uploads')));
+app.use(clerkMiddleware())
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/posts', postRoutes);

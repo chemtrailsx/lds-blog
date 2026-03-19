@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../api';
 import toast from 'react-hot-toast';
-import { useAuth } from '../context/AuthContext';
+import { useUser } from '@clerk/clerk-react';
 
 export default function PostDetailPage() {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user } = useUser();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,7 +33,7 @@ export default function PostDetailPage() {
   if (!post) return <div className="text-center py-20 text-parchment/40 font-serif italic">Post not found.</div>;
 
   const isOwner = user && user.id === post.editor;
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.publicMetadata?.role === 'admin';
 
   return (
     <article className="max-w-3xl mx-auto px-4 py-12">
