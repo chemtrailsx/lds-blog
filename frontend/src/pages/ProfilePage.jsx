@@ -54,6 +54,9 @@ export default function ProfilePage() {
         </div>
         <div>
           <h1 className="font-serif text-2xl text-parchment">{displayName}</h1>
+          {user?.email && (
+            <p className="text-parchment/50 text-sm mt-0.5">{user.email}</p>
+          )}
           {user?.role === 'admin' && (
             <span className="text-amber/60 text-xs tracking-widest uppercase">Admin</span>
           )}
