@@ -12,8 +12,6 @@ import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
 import AuthorPage from './pages/AuthorPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -50,8 +48,6 @@ export default function App() {
         <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="/author/:id" element={<AuthorPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
     </div>
   );
