@@ -4,7 +4,7 @@ async function sendPasswordReset(toEmail, resetUrl) {
   await axios.post(
     'https://api.brevo.com/v3/smtp/email',
     {
-      sender: { name: 'L&D Society', email: 'noreply@ldsnitjsr.in' },
+      sender: { name: 'L&D Society', email: process.env.BREVO_SENDER_EMAIL || 'filzaahsan006@gmail.com' },
       to: [{ email: toEmail }],
       subject: 'Reset your password — L&D Society',
       htmlContent: `
