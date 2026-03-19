@@ -39,10 +39,11 @@ export default function LoginPage() {
               <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Email</label>
               <input type="email" className="input-field" placeholder="your@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
             </div>
-            <div>
-              <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Password</label>
-              <input type="password" className="input-field" placeholder="••••••••" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required />
+            <div className="flex items-center justify-between">
+              <label className="block text-xs tracking-widest uppercase text-parchment/50">Password</label>
+              <Link to="/forgot-password" className="text-amber/60 hover:text-amber text-xs transition-colors">Forgot password?</Link>
             </div>
+            <input type="password" className="input-field" placeholder="••••••••" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required />
             <button type="submit" disabled={loading} className="btn-primary w-full py-3 disabled:opacity-50">
               {loading ? 'Signing in...' : 'Sign In'}
             </button>

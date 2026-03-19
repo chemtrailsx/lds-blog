@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Post = require('../models/Post');
+const Notification = require('../models/Notification');
 const { authMiddleware } = require('../middleware/auth');
 
 // GET all posts
@@ -31,6 +32,9 @@ router.post('/', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Validation failed', fields: ['title', 'author', 'category', 'body'] });
 
     const post = await Post.create({ title, author, category, coverImage, body, editor: req.user.sub });
+
+    // Save notification to DB
+    await Notification.create({ title: post.title, author: post.author, category: post.category, postId: post._id });
 
     // Emit real-time notification
     const io = req.app.get('io');

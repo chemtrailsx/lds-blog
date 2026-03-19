@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotificationBell from './NotificationBell';
 
 function ProfileIcon({ initial }) {
   return (
@@ -35,6 +36,7 @@ export default function Navbar() {
               <Link to="/profile" title="My Profile">
                 <ProfileIcon initial={initial} />
               </Link>
+              <NotificationBell />
               <button onClick={handleLogout} className="btn-ghost text-xs py-1 px-3">Logout</button>
             </>
           ) : (
