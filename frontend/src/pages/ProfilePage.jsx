@@ -10,17 +10,21 @@ const YEARS = Array.from({ length: 30 }, (_, i) => String(currentYear - i));
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
   const [form, setForm] = useState({ name: '', gender: '', memberSince: '', bio: '' });
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     api.get('/api/v1/profile/me')
-      .then(r => setForm({
-        name: r.data.name || '',
-        gender: r.data.gender || '',
-        memberSince: r.data.memberSince || '',
-        bio: r.data.bio || '',
-      }))
+      .then(r => {
+        setForm({
+          name: r.data.name || '',
+          gender: r.data.gender || '',
+          memberSince: r.data.memberSince || '',
+          bio: r.data.bio || '',
+        });
+        setEmail(r.data.email || '');
+      })
       .catch(() => toast.error('Failed to load profile'))
       .finally(() => setLoading(false));
   }, []);
@@ -54,8 +58,8 @@ export default function ProfilePage() {
         </div>
         <div>
           <h1 className="font-serif text-2xl text-parchment">{displayName}</h1>
-          {user?.email && (
-            <p className="text-parchment/50 text-sm mt-0.5">{user.email}</p>
+          {email && (
+            <p className="text-parchment/50 text-sm mt-0.5">{email}</p>
           )}
           {user?.role === 'admin' && (
             <span className="text-amber/60 text-xs tracking-widest uppercase">Admin</span>

@@ -12,6 +12,7 @@ const makeToken = (user) =>
 const publicUser = (user) => ({
   id: user._id,
   name: user.name,
+  email: user.email,
   role: user.role,
   gender: user.gender,
   memberSince: user.memberSince,
