@@ -29,7 +29,9 @@ export default function Navbar() {
 
           {user ? (
             <>
-              <Link to="/create" className="text-parchment/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Write</Link>
+              {(user.role === 'writer' || user.role === 'admin') && (
+                <Link to="/create" className="text-parchment/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Write</Link>
+              )}
               {user.role === 'admin' && (
                 <Link to="/admin" className="text-amber/70 hover:text-amber transition-colors uppercase text-xs tracking-widest">Admin</Link>
               )}

@@ -8,10 +8,48 @@ export default function RegisterPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [emailError, setEmailError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const ALLOWED_DOMAINS = new Set([
+    'gmail.com', 'googlemail.com',
+    'yahoo.com', 'yahoo.co.uk', 'yahoo.co.in', 'yahoo.fr', 'yahoo.de',
+    'outlook.com', 'hotmail.com', 'hotmail.co.uk', 'live.com', 'msn.com',
+    'icloud.com', 'me.com', 'mac.com',
+    'protonmail.com', 'proton.me',
+    'zoho.com', 'aol.com', 'mail.com',
+    'gmx.com', 'gmx.net', 'tutanota.com', 'fastmail.com', 'hey.com',
+  ]);
+
+  const isValidEmail = (email) => {
+    const parts = email.toLowerCase().split('@');
+    if (parts.length !== 2) return false;
+    const domain = parts[1];
+    if (ALLOWED_DOMAINS.has(domain)) return true;
+    if (domain.endsWith('.edu') || domain.includes('.ac.')) return true;
+    const tld = domain.split('.').pop();
+    const validTlds = ['com', 'org', 'net', 'edu', 'gov', 'io', 'co', 'uk', 'in', 'de', 'fr', 'au'];
+    if (!validTlds.includes(tld)) return false;
+    const domainWithoutTld = domain.slice(0, domain.lastIndexOf('.'));
+    return domainWithoutTld.length >= 3;
+  };
+
+  const handleEmailChange = (e) => {
+    const val = e.target.value;
+    setForm(f => ({ ...f, email: val }));
+    if (val && val.includes('@') && !isValidEmail(val)) {
+      setEmailError('Please use a valid email address (e.g. Gmail, Yahoo, Outlook)');
+    } else {
+      setEmailError('');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isValidEmail(form.email)) {
+      setEmailError('Please use a valid email address (e.g. Gmail, Yahoo, Outlook)');
+      return;
+    }
     setLoading(true);
     try {
       const { data } = await api.post('/api/v1/auth/register', form);
@@ -43,7 +81,8 @@ export default function RegisterPage() {
             </div>
             <div>
               <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Email</label>
-              <input type="email" className="input-field" placeholder="your@email.com" value={form.email} onChange={set('email')} required />
+              <input type="email" className={`input-field ${emailError ? 'border-red-500/60' : ''}`} placeholder="your@email.com" value={form.email} onChange={handleEmailChange} required />
+              {emailError && <p className="text-red-400/80 text-xs mt-1">{emailError}</p>}
             </div>
             <div>
               <label className="block text-xs tracking-widest uppercase text-parchment/50 mb-2">Password</label>

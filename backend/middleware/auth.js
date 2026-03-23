@@ -16,4 +16,10 @@ function adminMiddleware(req, res, next) {
   next();
 }
 
-module.exports = { authMiddleware, adminMiddleware };
+function writerMiddleware(req, res, next) {
+  if (req.user?.role !== 'writer' && req.user?.role !== 'admin')
+    return res.status(403).json({ error: 'Writer access required. Ask an admin to approve your account.' });
+  next();
+}
+
+module.exports = { authMiddleware, adminMiddleware, writerMiddleware };

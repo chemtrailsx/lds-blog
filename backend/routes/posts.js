@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Post = require('../models/Post');
 const Notification = require('../models/Notification');
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware, writerMiddleware } = require('../middleware/auth');
 
 // GET all posts
 router.get('/', async (req, res) => {
@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST create
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', authMiddleware, writerMiddleware, async (req, res) => {
   try {
     const { title, author, category, coverImage, body } = req.body;
     if (!title || !author || !category || !body)

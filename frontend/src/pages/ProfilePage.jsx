@@ -64,6 +64,12 @@ export default function ProfilePage() {
           {user?.role === 'admin' && (
             <span className="text-amber/60 text-xs tracking-widest uppercase">Admin</span>
           )}
+          {user?.role === 'writer' && (
+            <span className="text-green-400/70 text-xs tracking-widest uppercase">Writer</span>
+          )}
+          {user?.role === 'reader' && (
+            <span className="text-parchment/30 text-xs tracking-widest uppercase">Reader · pending writer approval</span>
+          )}
         </div>
       </div>
 

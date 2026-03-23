@@ -3,8 +3,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 const { isValidEmailDomain } = require('../utils/validateEmail');
 const { sendPasswordReset } = require('../utils/mailer');
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 
 const makeToken = (user) =>
   jwt.sign({ sub: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -37,6 +39,17 @@ router.post('/register', async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 12);
     const user = await User.create({ name, email: email.toLowerCase(), password: hashed });
+
+    // Notify admin of new registration
+    await Notification.create({
+      type: 'new_user',
+      title: `New member: ${user.name}`,
+      author: user.name,
+      category: 'Registration',
+      userId: user._id,
+    });
+    const io = req.app.get('io');
+    io.emit('new_user', { userId: user._id, name: user.name, email: user.email });
 
     res.status(201).json({ token: makeToken(user), user: publicUser(user) });
   } catch (err) {
@@ -110,6 +123,38 @@ router.post('/reset-password', async (req, res) => {
     await user.save();
 
     res.json({ message: 'Password reset successfully. You can now log in.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET pending users (readers awaiting writer approval)
+router.get('/pending-users', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const users = await User.find({ role: 'reader' }).select('-password').sort({ createdAt: -1 });
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PATCH approve user as writer
+router.patch('/approve-writer/:id', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, { role: 'writer' }, { new: true }).select('-password');
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PATCH revoke writer back to reader
+router.patch('/revoke-writer/:id', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, { role: 'reader' }, { new: true }).select('-password');
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
