@@ -18,7 +18,10 @@ export default function Navbar() {
   const initial = (user?.name || '?')[0].toUpperCase();
 
   return (
-    <nav className="border-b border-amber/20 bg-bark/80 backdrop-blur-sm sticky top-0 z-40">
+    <nav className="border-b border-amber/20 sticky top-0 z-40" style={{
+      background: 'rgba(26, 20, 16, 0.8)',
+      backdropFilter: 'blur(12px)'
+    }}>
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="font-serif text-xl text-parchment hover:text-amber transition-colors">
           <span className="text-amber">L</span>&amp;<span className="text-amber">D</span> Society

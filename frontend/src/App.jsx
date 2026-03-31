@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import IntroAnimation from './components/IntroAnimation';
+import GradientMesh from './components/GradientMesh';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import PostDetailPage from './pages/PostDetailPage';
@@ -36,9 +37,11 @@ export default function App() {
   if (showIntro) return <IntroAnimation onComplete={handleIntroComplete} />;
 
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <Routes>
+    <div className="min-h-screen relative">
+      <GradientMesh />
+      <div className="relative z-10">
+        <Navbar />
+        <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/post/:id" element={<PostDetailPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -49,6 +52,7 @@ export default function App() {
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="/author/:id" element={<AuthorPage />} />
       </Routes>
+      </div>
     </div>
   );
 }

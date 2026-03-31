@@ -5,7 +5,8 @@
 @layer base {
   body {
     @apply bg-ink text-parchment font-sans;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    background: radial-gradient(ellipse at top, #1a1410 0%, #0a0806 100%);
+    background-attachment: fixed;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -15,19 +16,49 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-amber text-ink font-serif font-semibold px-6 py-2 rounded transition-all duration-200 hover:bg-amber-dark hover:shadow-lg;
+    @apply bg-amber text-ink font-serif font-semibold px-6 py-2 rounded-lg transition-all duration-300;
+    box-shadow: 0 4px 14px rgba(201, 168, 76, 0.25);
+  }
+  
+  .btn-primary:hover {
+    @apply bg-amber;
+    box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
+    transform: translateY(-2px);
   }
 
   .btn-ghost {
-    @apply border border-amber text-amber font-serif px-6 py-2 rounded transition-all duration-200 hover:bg-amber hover:text-ink;
+    @apply border border-amber/40 text-amber font-serif px-6 py-2 rounded-lg transition-all duration-300;
+    background: rgba(201, 168, 76, 0.05);
+  }
+  
+  .btn-ghost:hover {
+    @apply bg-amber/10 border-amber/60;
+    transform: translateY(-1px);
   }
 
   .input-field {
-    @apply bg-bark border border-amber/30 text-parchment placeholder-parchment/40 rounded px-4 py-2 w-full focus:outline-none focus:border-amber transition-colors;
+    @apply text-parchment placeholder-parchment/40 rounded-lg px-4 py-2 w-full focus:outline-none transition-all duration-300;
+    background: rgba(44, 31, 20, 0.5);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    backdrop-filter: blur(10px);
+  }
+  
+  .input-field:focus {
+    border-color: rgba(201, 168, 76, 0.5);
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
   }
 
   .card {
-    @apply bg-bark border border-amber/20 rounded-lg overflow-hidden transition-all duration-300 hover:border-amber/50 hover:shadow-xl hover:shadow-amber/10;
+    @apply rounded-xl overflow-hidden transition-all duration-500;
+    background: rgba(44, 31, 20, 0.4);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    backdrop-filter: blur(12px);
+  }
+  
+  .card:hover {
+    border-color: rgba(201, 168, 76, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
   }
 }
 
