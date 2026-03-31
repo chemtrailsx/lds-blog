@@ -1,33 +1,6 @@
-import { useEffect, useRef } from 'react';
-
-const MEMBERS = [
-  { name: 'Raunak', avatar: 'R' },
-  { name: 'Neha', avatar: 'N' },
-  { name: 'Anubhav', avatar: 'An' },
-  { name: 'Amritanshu', avatar: 'Am' },
-  { name: 'Aditya', avatar: 'Ad' },
-  { name: 'Swastik', avatar: 'Sw' },
-  { name: 'Unnati', avatar: 'U' },
-  { name: 'Rishab', avatar: 'Ri' },
-  { name: 'Bhumi', avatar: 'B' },
-  { name: 'Priyanshi', avatar: 'P' },
-  { name: 'Abhay', avatar: 'Ab' },
-  { name: 'Rehaan', avatar: 'Re' },
-  { name: 'Tanishq', avatar: 'T' },
-  { name: 'Nirmit', avatar: 'Ni' },
-  { name: 'Anandita', avatar: 'An' },
-  { name: 'Arpit', avatar: 'Ar' },
-  { name: 'Shikhar', avatar: 'Sh' },
-  { name: 'Vanshika', avatar: 'V' },
-  { name: 'Krishnarjun', avatar: 'K' },
-  { name: 'Aditi', avatar: 'Ad' },
-  { name: 'Sohail', avatar: 'So' },
-  { name: 'Shanawaz', avatar: 'Sh' },
-  { name: 'Yagya', avatar: 'Y' },
-];
-
-// Duplicate for seamless infinite scroll
-const DOUBLED = [...MEMBERS, ...MEMBERS];
+import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../api';
 
 const COLORS = [
   'from-amber/30 to-bark',
@@ -37,17 +10,32 @@ const COLORS = [
 ];
 
 export default function MembersCarousel() {
+  const [members, setMembers] = useState([]);
+  const [doubled, setDoubled] = useState([]);
   const trackRef = useRef(null);
   const animRef = useRef(null);
   const posRef = useRef(0);
   const pausedRef = useRef(false);
 
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
+    // Fetch all users
+    api.get('/api/v1/auth/all-users')
+      .then(r => {
+        setMembers(r.data);
+        setDoubled([...r.data, ...r.data]); // Duplicate for seamless scroll
+      })
+      .catch(() => {
+        // Fallback to empty if endpoint doesn't exist yet
+        setMembers([]);
+      });
+  }, []);
 
-    const speed = 0.5; // px per frame
-    const totalWidth = track.scrollWidth / 2; // half because doubled
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || doubled.length === 0) return;
+
+    const speed = 0.5;
+    const totalWidth = track.scrollWidth / 2;
 
     const animate = () => {
       if (!pausedRef.current) {
@@ -60,7 +48,7 @@ export default function MembersCarousel() {
 
     animRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animRef.current);
-  }, []);
+  }, [doubled]);
 
   return (
     <section className="py-16 border-t border-amber/20 overflow-hidden">
@@ -87,14 +75,21 @@ export default function MembersCarousel() {
           onMouseEnter={() => { pausedRef.current = true; }}
           onMouseLeave={() => { pausedRef.current = false; }}
         >
-          {DOUBLED.map((member, i) => (
-            <div key={i} className="flex flex-col items-center gap-3 w-32 shrink-0">
-              <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${COLORS[i % COLORS.length]} border border-amber/30 flex items-center justify-center text-amber font-serif text-xl select-none`}>
-                {member.avatar}
-              </div>
-              <p className="text-parchment/70 text-sm font-sans text-center leading-tight">{member.name}</p>
-            </div>
-          ))}
+          {doubled.map((member, i) => {
+            const initial = member.name ? member.name[0].toUpperCase() : '?';
+            return (
+              <Link
+                key={`${member._id}-${i}`}
+                to={`/author/${member._id}`}
+                className="flex flex-col items-center gap-3 w-32 shrink-0 group"
+              >
+                <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${COLORS[i % COLORS.length]} border border-amber/30 flex items-center justify-center text-amber font-serif text-xl select-none transition-all duration-300 group-hover:scale-110 group-hover:border-amber/60 group-hover:shadow-lg group-hover:shadow-amber/20`}>
+                  {initial}
+                </div>
+                <p className="text-parchment/70 text-sm font-sans text-center leading-tight group-hover:text-amber transition-colors">{member.name}</p>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

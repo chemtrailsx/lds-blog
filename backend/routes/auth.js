@@ -160,4 +160,14 @@ router.patch('/revoke-writer/:id', authMiddleware, adminMiddleware, async (req, 
   }
 });
 
+// GET all users (for members carousel)
+router.get('/all-users', async (req, res) => {
+  try {
+    const users = await User.find().select('name _id').sort({ name: 1 });
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
