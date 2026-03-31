@@ -10,7 +10,6 @@ const COLORS = [
 ];
 
 export default function MembersCarousel() {
-  const [members, setMembers] = useState([]);
   const [doubled, setDoubled] = useState([]);
   const trackRef = useRef(null);
   const animRef = useRef(null);
@@ -21,16 +20,18 @@ export default function MembersCarousel() {
     // Fetch all users
     api.get('/api/v1/auth/all-users')
       .then(r => {
+        console.log('Fetched users:', r.data);
         if (r.data && r.data.length > 0) {
-          setMembers(r.data);
           setDoubled([...r.data, ...r.data]);
         } else {
           // Fallback to hardcoded members if no users
+          console.log('No users found, using fallback');
           useFallbackMembers();
         }
       })
-      .catch(() => {
+      .catch((err) => {
         // Fallback if endpoint doesn't exist or fails
+        console.error('Failed to fetch users:', err);
         useFallbackMembers();
       });
   }, []);
@@ -61,7 +62,6 @@ export default function MembersCarousel() {
       { _id: '22', name: 'Shanawaz' },
       { _id: '23', name: 'Yagya' },
     ];
-    setMembers(fallback);
     setDoubled([...fallback, ...fallback]);
   };
 
