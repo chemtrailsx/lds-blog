@@ -21,14 +21,49 @@ export default function MembersCarousel() {
     // Fetch all users
     api.get('/api/v1/auth/all-users')
       .then(r => {
-        setMembers(r.data);
-        setDoubled([...r.data, ...r.data]); // Duplicate for seamless scroll
+        if (r.data && r.data.length > 0) {
+          setMembers(r.data);
+          setDoubled([...r.data, ...r.data]);
+        } else {
+          // Fallback to hardcoded members if no users
+          useFallbackMembers();
+        }
       })
       .catch(() => {
-        // Fallback to empty if endpoint doesn't exist yet
-        setMembers([]);
+        // Fallback if endpoint doesn't exist or fails
+        useFallbackMembers();
       });
   }, []);
+
+  const useFallbackMembers = () => {
+    const fallback = [
+      { _id: '1', name: 'Raunak' },
+      { _id: '2', name: 'Neha' },
+      { _id: '3', name: 'Anubhav' },
+      { _id: '4', name: 'Amritanshu' },
+      { _id: '5', name: 'Aditya' },
+      { _id: '6', name: 'Swastik' },
+      { _id: '7', name: 'Unnati' },
+      { _id: '8', name: 'Rishab' },
+      { _id: '9', name: 'Bhumi' },
+      { _id: '10', name: 'Priyanshi' },
+      { _id: '11', name: 'Abhay' },
+      { _id: '12', name: 'Rehaan' },
+      { _id: '13', name: 'Tanishq' },
+      { _id: '14', name: 'Nirmit' },
+      { _id: '15', name: 'Anandita' },
+      { _id: '16', name: 'Arpit' },
+      { _id: '17', name: 'Shikhar' },
+      { _id: '18', name: 'Vanshika' },
+      { _id: '19', name: 'Krishnarjun' },
+      { _id: '20', name: 'Aditi' },
+      { _id: '21', name: 'Sohail' },
+      { _id: '22', name: 'Shanawaz' },
+      { _id: '23', name: 'Yagya' },
+    ];
+    setMembers(fallback);
+    setDoubled([...fallback, ...fallback]);
+  };
 
   useEffect(() => {
     const track = trackRef.current;
